@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <img src="./images/Background.jpg" alt="Warship in the rain" class="background">
+    <div class="title-login" id="title-login">
+        <h1 id="title">Battleship</h1>
+        <h2 id="rules-title">Rules</h2>
+        <p>Guess where the enemy battleship is by clicking on a tile and seeing what the result is.</p>
+        <button type="button" id="start-btn" class="btn">Easy</button>
+        <a type="button" id="medium-btn" class="btn" href="./medium.html">Medium</a>
+    </div>
+
+    <div class="game-container" id="game-container"></div>
+    <button class="menu btn" id="menu-btn" type="button">Return to Menu</button>
+
+    <div class="result" id="result">
+        <h3>Congratulations! You Win!</h3>
+        <p id="round-count"></p>
+        <button id="reset-btn" class="btn">Reset</button>
+    </div>
+
+    <!--This will be the newly generated 5x5 grid-->
+
+    <script src="./js/script.js"></script>
+</body>
+</html>

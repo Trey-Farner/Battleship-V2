@@ -1,0 +1,81 @@
+* {
+    box-sizing: border-box;
+}
+
+
+.med-container {
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    position: absolute;
+    top: 0;
+    left: 0;
+    grid-template: repeat(5, 1fr) / repeat(5, 1fr);
+    border: 2px solid #000;
+    justify-self: center;
+    background-color: #000;
+}
+
+.computer-container {
+    width: 50%;
+    min-width: 300px;
+    max-width: 525px;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    position: relative;
+    grid-template: repeat(5, 1fr) / repeat(5, 1fr);
+    border: 2px solid #000;
+    justify-self: center;
+    transition: 2s;
+    background-color: #000;
+}
+
+.computer-board-transition {
+    width: 25%;
+    display: grid;
+    -webkit-transition: 3s;
+    -moz-transition: 3s;
+    -ms-transition: 3s;
+    -o-transition: 3s;
+    transition: 2s;
+}
+
+.player-board-transition {
+    transform:
+    perspective(75em)
+    rotateX(60deg)
+    scale(1.2);
+    translate: 0% 90%;
+    transition: 2s;
+}
+
+
+.med-tiles {
+    background-color: #ffffff;
+    border: 2px solid #000;
+    transition: .5s;
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red
+}
+
+.grey {
+    background-color: grey;
+}
+
+.ship {
+    border-radius: 10px;
+    width: 20%;
+    box-sizing: border-box;
+    border: .5rem solid #ffffff00;
+}
+
+.orange-border {
+    border: .5rem solid orange;
+}

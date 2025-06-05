@@ -1,0 +1,125 @@
+@keyframes fade-in {
+    from {opacity: 0}
+    50% {opacity: 0}
+    to {opacity: 1}
+}
+
+h1 {
+    margin: 0 0 2rem 0;
+    font-size: 5rem;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    height: 100vh;
+    color: #ffffff;
+}
+
+.title-login {
+    position: relative;
+    top: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    width: 80%;
+    max-width: 400px;
+    min-width: 200px;
+}
+
+.background {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+    z-index: -1;
+    top: 0p;
+    filter: brightness(60%);
+}
+
+.game-container {
+    box-sizing: content-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-self: center;
+    position: relative;
+    top: 3rem;
+    border: solid black 2px;
+    max-width: 510px;
+    width: 80%;
+    aspect-ratio: 1 / 1;
+    margin-top: 0;
+}
+
+h3 {
+    margin: 0;
+}
+
+.boxes {
+    background-color: beige;
+    box-sizing: border-box;
+    max-width: 200px;
+    width: 33.333333333333%;
+    aspect-ratio: 1 / 1;
+    border: solid black 2px;
+}
+
+.result {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #00000099;
+    top: 0;
+    color: #ffffff;
+    animation: fade-in 1s;
+}
+
+.btn {
+    background: linear-gradient(#ffb703, #fb8500) ;
+    border: solid 2px #fb8500;
+    border-radius: 10px;
+    color: white;
+    padding: .45rem .85rem;
+}
+
+.menu {
+    display: none;
+    position: relative;
+    left: 50%;
+    translate: -50%;
+    bottom: -4rem;
+}
+
+@keyframes fade-in-red {
+    from {background-color: beige}
+    to {background-color: red}
+}
+
+@keyframes fade-in-grey {
+    from {background-color: beige}
+    to {background-color: grey}
+}
+
+
+
+.red {
+    background-color: red;
+    animation: fade-in-red .5s;
+}
+
+.grey {
+    background-color: grey;
+    animation: fade-in-grey .5s;
+}
+
+/* medium level classes */
