@@ -3,16 +3,28 @@ const mediumBtn = document.getElementById("medium-btn")
 const mediumGrid = document.getElementById("med-container")
 const resetSelectionBtn = document.getElementById("reset-selection-btn")
 const green = document.getElementsByClassName("green")
-// let medGrid = []
-// let gridRow = 5
-// let gridCol = 5
+const shipContainer = document.getElementById("ships-container")
 const ship = document.querySelectorAll(".ship")
 const invalidPlacement = document.getElementById("invalid-placement")
 const turnIndicator = document.getElementById("turn-indicator")
-let computerPicks = []
+const startGameBtn = document.getElementById("start-game")
+const computerGridContainer = document.getElementById("computer-container")
+// let medGrid = []
+// let gridRow = 5
+// let gridCol = 5
+// let computerPicks = []
 let selectedShip;
-const shipContainer = document.getElementById("ships-container")
+let playerShips = []
 
+class Player {
+    constructor(difficulty) {
+        this.ships = []
+    }
+
+    otherShips() {
+        this.ships.forEach
+    }
+}
 
 
 class Ship {
@@ -50,10 +62,12 @@ class Ship {
                 document.getElementById(newShip.id).classList.remove("orange-border")
             } else {
                 this.selected = true
+                selectedShip = this
                 document.getElementById(newShip.id).classList.add("orange-border")
                 this.selected = false
             }
-            console.log(this.selected)
+            console.log(selectedShip)
+            console.log(document.querySelector(".orange-border").id)
             console.log(document.querySelectorAll(".orange-border"))
         })
     }
@@ -85,19 +99,75 @@ class Ship {
             }
         }
     }
-    
-    isOnBoard() {
-        if (this.position.length !== 0) {
-            this.position = []
-            removeShip()
+
+    //Tells computer to place the ship and add DOM visualisation
+    placement(grid, row, col) {
+        if (this.position.length === 0) {
+            this.placeShip(grid, row, col)
+        } else {
+            this.removeShip(grid)
+            this.placeShip(grid, row, col)
         }
     }
-}
 
-const destroyer = new Ship("destroyer", 2)
-const submarine = new Ship("submarine", 3)
-destroyer.createShip()
-submarine.createShip()
+    placeShip(grid, row, col) {
+        for (let i = 0; i <= this.size - 1; i++) {
+            if (this.isVertical) {
+                this.position.push([row++, col])
+            } else {
+                this.position.push([row, col++])
+            }
+            
+            //Check if ship is on the board
+            if (this.isOnBoard(grid)) {
+                //if it fits on the board, add to dom
+                // console.log(shipId.position.length)
+                // console.log(shipId.position[i][1])
+                console.log("plz help me")
+                document.getElementById(`tile-${this.position[i][0]}-${this.position[i][1]}`).classList.add("green")
+                invalidPlacement.innerText = ""
+            } else {
+                //if it cant fit on the board remove the ship
+                this.removeShip(grid)
+                invalidPlacement.innerText = "Please place your ship in a valid location"
+            }
+        } 
+    }
+    
+    removeShip(grid) {
+        for (let i = 0; i <= this.position.length - 1; i++) {
+            if (this.isOnBoard(grid)) {
+                document.getElementById(`tile-${this.position[i][0]}-${this.position[i][1]}`).classList.remove("green")
+            }
+            console.log("remove")
+        }
+        this.position = []
+    }
+    
+    isOnBoard(grid) {
+        let bool = true
+        for (let i = 0; i <= this.position.length - 1; i++) {
+            if (this.position[i][1] >= grid.columns ||
+                this.position[i][0] >= grid.rows
+            ) {
+                bool = false
+            }
+        }
+        console.log(bool)
+        return bool
+    }
+    
+    isThisOccupied(i) {
+        let bool = false
+        playerShips.forEach(el => el.position.forEach(j => {
+            if ((this.position[i][0] === j[0]) && (this.position[i][1] === j[1])) {
+                bool = true
+                val++
+            }
+        }))
+        return bool
+    }
+}
 
 class Grid {
     constructor(name, rows, col) {
@@ -107,105 +177,46 @@ class Grid {
         this.gridArr = []
     }
     
-    generateTiles() {
+    generateTiles(board) {
         // debugger
         for (let i = 0; i <= this.rows - 1; i++) {
             this.gridArr[i] = []
             for (let j = 0; j <= this.columns - 1; j++) {
                 this.gridArr[i][j] = j
                 const tile = document.createElement("div")
-                mediumGrid.appendChild(tile)
+                board.appendChild(tile)
                 tile.id = `tile-${i}-${j}`
                 tile.classList.add("med-tiles")
                 tile.addEventListener("click", () => {
-                    placement(string2Variable[selectedShip], i, j)
+                    if (selectedShip !== undefined) {
+                        selectedShip.placement(this, i, j)
+                        selectedShip = undefined
+                        while (document.querySelectorAll(".orange-border").length > 0) {
+                            document.querySelector(".orange-border").classList.remove("orange-border")
+                        }
+                        // console.log(selectedShip)
+                    }
                 })
             }
         }
     }
-
-    drop() {
-
-    }
 }
 
-// console.log(ship)
-
-//find which ship is selected
-
-// ship.forEach(el => {
-//     el.addEventListener("click", () => {
-//         let bool = false
-//         while (document.querySelectorAll(".orange-border").length > 0) {
-//             document.querySelectorAll(".orange-border").forEach(el => el.classList.remove("orange-border")) 
-//         }
-//         if (bool) {
-//             selectedShip = el.id
-//             bool = false
-//             document.getElementById(el.id).classList.remove("orange-border")
-//         } else {
-//             selectedShip = el.id
-//             bool = true
-//             document.getElementById(el.id).classList.add("orange-border")
-//         }
-//         console.log(selectedShip)
-//         console.log(document.querySelectorAll(".orange-border"))
-//     })
-// })
-
-//random number generators
-const randomNumber = () => Math.floor(Math.random() * 5)
-const randomNumberLimit = val => Math.floor(Math.random() * val)
-const removeShip = id => {
-    while (green.length > 0) {
-        green[0].classList.remove("green")
-        id.position = []
-    }
-    shipSelect = ""
-    id.position = []
-}
-
-//Tells computer to place the ship and add DOM visualisation
-const placement = (shipId, row, col) => {
-    
-    for (let i = 0; i <= shipId.size - 1; i++) {
-        if (shipId.isVertical) {
-            shipId.position.push([row++, col])
-        } else {
-            shipId.position.push([row, col++])
-        }
-        
-        // console.log(shipId.position[i])
-        // console.log(medGrid.rows, medGrid.columns)
-        //Check if ship is on the board
-        if (shipId.position[i][1] >= medGrid.columns ||
-            shipId.position[i][0] >= medGrid.rows
-        ) {
-            //if not remove the ship
-            removeShip(shipId)
-            invalidPlacement.innerText = "Please place your ship in a valid location"
-        } else {
-            //if it is on the board, add to dom
-            // console.log(shipId.position.length)
-            // console.log(shipId.position[i][1])
-
-            document.getElementById(`tile-${shipId.position[i][0]}-${shipId.position[i][1]}`).classList.add("green")
-            invalidPlacement.innerText = ""
-        }
-    }
-    if (green.length >= 1) {
-
-    }
-}
-
-
-
+const destroyer = new Ship("destroyer", 2)
+const submarine = new Ship("submarine", 3)
+const battleship = new Ship("battleship", 4)
+destroyer.createShip()
+submarine.createShip()
+battleship.createShip()
 
 
 
 const medGrid = new Grid("medGrid", 5, 5)
-medGrid.generateTiles()
-const string2Variable = {
-    destroyer: destroyer,
-    submarine: submarine
-}
+const computerMedGrid = new Grid("computerMedGrid", 5, 5)
+medGrid.generateTiles(mediumGrid)
+computerMedGrid.generateTiles(computerGridContainer)
+
+startGameBtn.addEventListener("click", () => {
+    mediumGrid.classList.add("player-board-transition")
+    shipContainer.style.display = "none"
+})
