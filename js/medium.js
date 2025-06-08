@@ -14,15 +14,34 @@ const computerGridContainer = document.getElementById("computer-container")
 // let gridCol = 5
 // let computerPicks = []
 let selectedShip;
-let playerShips = []
+// let playerShips = [destroyer, submarine, battleship]
 
 class Player {
-    constructor(difficulty) {
-        this.ships = []
+    constructor(ships) {
+        this.ships = ships
+        this.turn = false
+        this.win = false
     }
 
     otherShips() {
         this.ships.forEach
+    }
+
+    winCheck() {
+        let sunkShips = 0
+        this.ships.forEach(el => {
+            if (el.isSunk) {
+                sunkShips++
+            } 
+        })
+        sunkShips === this.ships.length ? true : false
+    }
+}
+
+class ComputerPlayer extends Player {
+    makeMove() {
+        let randomMove = [Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)]
+        return randomMove
     }
 }
 
@@ -37,12 +56,6 @@ class Ship {
         this.isSunk = false;
         this.isVertical = false;
         this.selected = false;
-    }
-    
-    select() {
-        if (this.selected) {
-            
-        }
     }
     
     createShip() {
@@ -102,6 +115,7 @@ class Ship {
 
     //Tells computer to place the ship and add DOM visualisation
     placement(grid, row, col) {
+        console.log(this.position)
         if (this.position.length === 0) {
             this.placeShip(grid, row, col)
         } else {
@@ -117,21 +131,24 @@ class Ship {
             } else {
                 this.position.push([row, col++])
             }
-            
-            //Check if ship is on the board
-            if (this.isOnBoard(grid)) {
-                //if it fits on the board, add to dom
-                // console.log(shipId.position.length)
-                // console.log(shipId.position[i][1])
-                console.log("plz help me")
-                document.getElementById(`tile-${this.position[i][0]}-${this.position[i][1]}`).classList.add("green")
-                invalidPlacement.innerText = ""
-            } else {
-                //if it cant fit on the board remove the ship
-                this.removeShip(grid)
-                invalidPlacement.innerText = "Please place your ship in a valid location"
-            }
         } 
+            
+        //Check if ship is on the board
+        if (this.isOnBoard(grid)) {
+            //if it fits on the board, add to dom
+            // console.log(shipId.position.length)
+            // console.log(shipId.position[i][1])
+            console.log("plz help me")
+
+            for (let i = 0; i <= this.size - 1; i++) {
+                document.getElementById(`tile-${this.position[i][0]}-${this.position[i][1]}`).classList.add("green")
+            }
+            invalidPlacement.innerText = ""
+        } else {
+            //if it cant fit on the board remove the ship
+            this.removeShip(grid)
+            invalidPlacement.innerText = "Please place your ship in a valid location"
+        }
     }
     
     removeShip(grid) {
