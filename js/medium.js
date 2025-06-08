@@ -14,7 +14,22 @@ const computerGridContainer = document.getElementById("computer-container")
 // let gridCol = 5
 // let computerPicks = []
 let selectedShip;
-// let playerShips = [destroyer, submarine, battleship]
+
+
+let player = {
+    ships: [],
+    targetedCoords: [],
+}
+
+
+
+
+
+
+
+
+
+
 
 class Player {
     constructor(ships) {
@@ -22,11 +37,11 @@ class Player {
         this.turn = false
         this.win = false
     }
-
-    otherShips() {
-        this.ships.forEach
+    
+    SwitchTurns() {
+        this.turn ? this.turn = false : this.turn = true
     }
-
+    
     winCheck() {
         let sunkShips = 0
         this.ships.forEach(el => {
@@ -42,6 +57,12 @@ class ComputerPlayer extends Player {
     makeMove() {
         let randomMove = [Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)]
         return randomMove
+    }
+
+    isAHit() {
+        if (this.makeMove()[0] === playerShips[0]) {
+            
+        }
     }
 }
 
@@ -80,8 +101,8 @@ class Ship {
                 this.selected = false
             }
             console.log(selectedShip)
-            console.log(document.querySelector(".orange-border").id)
-            console.log(document.querySelectorAll(".orange-border"))
+            // console.log(document.querySelector(".orange-border").id)
+            // console.log(document.querySelectorAll(".orange-border"))
         })
     }
     
@@ -112,7 +133,7 @@ class Ship {
             }
         }
     }
-
+    
     //Tells computer to place the ship and add DOM visualisation
     placement(grid, row, col) {
         console.log(this.position)
@@ -123,7 +144,7 @@ class Ship {
             this.placeShip(grid, row, col)
         }
     }
-
+    
     placeShip(grid, row, col) {
         for (let i = 0; i <= this.size - 1; i++) {
             if (this.isVertical) {
@@ -132,14 +153,14 @@ class Ship {
                 this.position.push([row, col++])
             }
         } 
-            
+        
         //Check if ship is on the board
         if (this.isOnBoard(grid)) {
             //if it fits on the board, add to dom
             // console.log(shipId.position.length)
             // console.log(shipId.position[i][1])
             console.log("plz help me")
-
+            
             for (let i = 0; i <= this.size - 1; i++) {
                 document.getElementById(`tile-${this.position[i][0]}-${this.position[i][1]}`).classList.add("green")
             }
@@ -162,6 +183,7 @@ class Ship {
     }
     
     isOnBoard(grid) {
+        // debugger
         let bool = true
         for (let i = 0; i <= this.position.length - 1; i++) {
             if (this.position[i][1] >= grid.columns ||
@@ -174,12 +196,17 @@ class Ship {
         return bool
     }
     
-    isThisOccupied(i) {
+    isThisOccupied() {
         let bool = false
         playerShips.forEach(el => el.position.forEach(j => {
-            if ((this.position[i][0] === j[0]) && (this.position[i][1] === j[1])) {
+            console.log(el)
+            console.log(j)
+            // console.log(j)
+            // console.log(playerShips)
+            if ((this.position[this.size - 1][0] === j[0]) && (this.position[this.size - 1][1] === j[1])) {
+                console.log("true")
                 bool = true
-                val++
+                // val++
             }
         }))
         return bool
@@ -232,6 +259,7 @@ const medGrid = new Grid("medGrid", 5, 5)
 const computerMedGrid = new Grid("computerMedGrid", 5, 5)
 medGrid.generateTiles(mediumGrid)
 computerMedGrid.generateTiles(computerGridContainer)
+let playerShips = [destroyer, submarine, battleship]
 
 startGameBtn.addEventListener("click", () => {
     mediumGrid.classList.add("player-board-transition")
