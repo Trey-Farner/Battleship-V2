@@ -35,7 +35,7 @@ class Player {
         this.selections = []
     }
     
-    SwitchTurns() {
+    switchTurns() {
         this.turn ? this.turn = false : this.turn = true
     }
     
@@ -48,8 +48,6 @@ class Player {
         })
         sunkShips === this.ships.length ? true : false
     }
-    
-    
 }
 
 class ComputerPlayer extends Player {
@@ -62,6 +60,23 @@ class ComputerPlayer extends Player {
         if (this.makeMove()[0] === playerShips[0]) {
             
         }
+    }
+
+    takeTurn(grid) {
+        const coor = computerPlayer.makeMove()
+        let arr = computerPlayer.selections.filter(item => item !== coor)
+        computerPlayer.ships.forEach(el => el.position.forEach(pos => {
+            if ((pos[0] === coor[0] && pos[1] === coor[1]) || arr.length === computerPlayer.selections.length) {
+                // color = "red"
+                computerPlayer.selections.push(coor)
+                el.hit(medGrid, coor)
+                console.log(el.isSunk)
+            } else {
+                // document.getElementById(`${grid.name}-tile-${i}-${j}`).classList.add(color)
+            }
+        })) 
+        player.switchTurns()
+        computerPlayer.switchTurns()
     }
 }
 
@@ -131,8 +146,8 @@ class Ship {
             }
             //Check if ship is on the board
         }
-        if (!this.isOnBoard(grid) || this.isThisOccupied()) {
-            // console.log("is this working")
+        // console.log("is this working")
+        if (!this.isOnBoard(grid) || this.isThisOccupied(computerPlayer)) {
             //if not remove the ship
             this.position = []
             this.computerPlacement(grid)
@@ -160,7 +175,7 @@ class Ship {
             }
         } 
         //Check if ship is on the board
-        if (this.isOnBoard(grid) && !this.isThisOccupied()) {
+        if (this.isOnBoard(grid) && !this.isThisOccupied(player)) {
             //if it fits on the board, add to dom
             // console.log(shipId.position.length)
             // console.log(shipId.position[i][1])
@@ -212,22 +227,10 @@ class Ship {
         return bool
     }
     
-    isThisOccupied() {
+    isThisOccupied(user) {
         // console.log("hi")
         let bool = false
-        const arr = player.ships.filter(item => item !== this)
-        // for (let i = 0; i <= arr.length - 1; i++) {
-        //     for (let j = 0; j <= this.size; j++) {
-        //         if (player.ships[i].position[j] !== undefined) {
-        //             console.log(player.ships[i].position, this.position)
-        //             if ((this.position[j][0] !== player.ships[i].position[j][0]) && (this.position[j][1] !== player.ships[i].position[j][1])) {
-        //                 if (this.position[j][0] === player.ships[i].position[j][0] && this.position[j][1] === player.ships[i].position[j][0]) {
-        //                     bool = true
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        const arr = user.ships.filter(item => item !== this)
 // debugger
         for (let i = 0; i <= arr.length - 1; i++) {
             for (let j = 0; j <= arr[i].position.length - 1; j++) {
@@ -244,17 +247,6 @@ class Ship {
                 }
             }
         }
-        // player.ships.forEach(el => el.position.forEach(j => {
-        //     // console.log(el)
-        //     console.log(j)
-        //     // console.log(j)
-        //     // console.log(playerShips)
-        //     if ((el.position[el.size - 1][0] === j[0]) && (el.position[el.size - 1][1] === j[1])) {
-        //         console.log("true")
-        //         bool = true
-        //         // val++
-        //     }
-        // }))
         // console.log(bool)
         return bool
     }
@@ -288,24 +280,30 @@ class Grid {
                         // console.log(selectedShip)
                     }
                     if (this.name === "computerMedGrid") {
-                        player.selections.push([i, j])
-                        let color = "grey"
-                        computerPlayer.ships.forEach(el => el.position.forEach(pos => {
-                            if (pos[0] === i && pos[1] === j) {
-                                color = "red"
-                                el.hit(this, [i, j])
-                                console.log(el.isSunk)
-                            } else {
-                                document.getElementById(`${this.name}-tile-${i}-${j}`).classList.add(color)
+                        if (player.turn) {
+                            player.selections.push([i, j])
+                            let color = "grey"
+                            computerPlayer.ships.forEach(el => el.position.forEach(pos => {
+                                if (pos[0] === i && pos[1] === j) {
+                                    color = "red"
+                                    el.hit(this, [i, j])
+                                    console.log(el.isSunk)
+                                } else {
+                                    document.getElementById(`${this.name}-tile-${i}-${j}`).classList.add(color)
 
-                            }
-                        })) 
+                                }
+                            })) 
+                            player.switchTurns()
+                            computerPlayer.takeTurn()
+                            computerPlayer.switchTurns()
+                        }
                     }
                 })
             }
         }
     }
 }
+
 
 const destroyer = new Ship("destroyer", 2)
 const submarine = new Ship("submarine", 3)
@@ -333,4 +331,5 @@ startGameBtn.addEventListener("click", () => {
     computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
     console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
     console.log(computerPlayer.ships)
+    player.turn = true
 })
