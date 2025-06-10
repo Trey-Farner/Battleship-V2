@@ -121,6 +121,7 @@ class Ship {
         const placementVert = [Math.floor(Math.random() * (grid.columns - this.size)), Math.floor(Math.random() * grid.columns)]
         const placementHorizontal = [Math.floor(Math.random() * grid.columns), Math.floor(Math.random() * (grid.columns - this.size))]
         // console.log(placement)
+        console.log("hello")
         for (let i = 0; i <= this.size - 1; i++) {
             if (this.isVertical) {
                 this.position.push([placementVert[0]++, placementVert[1]])
@@ -128,7 +129,8 @@ class Ship {
                 this.position.push([placementHorizontal[0], placementHorizontal[1]++])
             }
             //Check if ship is on the board
-            if (!this.isOnBoard(grid)) {
+            if (!this.isOnBoard(grid) || this.isThisOccupied()) {
+                console.log("is this working")
                 //if not remove the ship
                 this.position = []
                 this.computerPlacement(grid)
@@ -156,9 +158,8 @@ class Ship {
                 this.position.push([row, col++])
             }
         } 
-        //  && !this.isThisOccupied()
         //Check if ship is on the board
-        if (this.isOnBoard(grid)) {
+        if (this.isOnBoard(grid) && !this.isThisOccupied()) {
             //if it fits on the board, add to dom
             // console.log(shipId.position.length)
             // console.log(shipId.position[i][1])
@@ -177,7 +178,7 @@ class Ship {
     
     removeShip(grid) {
         for (let i = 0; i <= this.size - 1; i++) {
-            if (this.isOnBoard(grid)) {
+            if (this.isOnBoard(grid) && !this.isThisOccupied()) {
                 document.getElementById(`${grid.name}-tile-${this.position[i][0]}-${this.position[i][1]}`).classList.remove("green")
             }
             console.log("remove")
@@ -211,8 +212,9 @@ class Ship {
     }
     
     isThisOccupied() {
+        console.log("hi")
         let bool = false
-        const arr = player.ships.filter(item => item !== this)
+        const arr = computerPlayer.ships.filter(item => item !== this)
         // for (let i = 0; i <= arr.length - 1; i++) {
         //     for (let j = 0; j <= this.size; j++) {
         //         if (player.ships[i].position[j] !== undefined) {
@@ -225,15 +227,18 @@ class Ship {
         //         }
         //     }
         // }
-
+// debugger
         for (let i = 0; i <= arr.length - 1; i++) {
-            for (let j = 0; j <= this.size; j++) {
-                if (arr[i].position[j] !== undefined) {
-                    console.log(arr[i].position[j], this.position[j])
-                    if (arr[i].position[j][0] === this.position[j][0] &&
-                        arr[i].position[j][1] === this.position[j][1]
-                    ) {
-                        bool = true
+            for (let j = 0; j <= arr[i].position.length - 1; j++) {
+                console.log(arr[i].position[j] !== undefined, this.position[j] !== undefined)
+                for (let l = 0; l <= this.position.length; l++) {
+                    if (arr[i].position[l] !== undefined && this.position[j] !== undefined) {
+                        console.log(arr[i].position[j], this.position[j])
+                        if (arr[i].position[l][0] === this.position[j][0] &&
+                            arr[i].position[l][1] === this.position[j][1]
+                        ) {
+                            bool = true
+                        }
                     }
                 }
             }
