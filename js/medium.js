@@ -13,6 +13,7 @@ const computerGridContainer = document.getElementById("computer-container")
 // let gridRow = 5
 // let gridCol = 5
 // let computerPicks = []
+let players;
 let selectedShip;
 let computerPlayer;
 
@@ -114,14 +115,14 @@ class Ship {
         }
     }
     
-    
     computerPlacement(grid) {
+        // debugger
         const randomNumber = () => Math.floor(Math.random() * 2)
         randomNumber() % 2 === 0 ? this.isVertical = true : this.isVertical = false
         const placementVert = [Math.floor(Math.random() * (grid.columns - this.size)), Math.floor(Math.random() * grid.columns)]
         const placementHorizontal = [Math.floor(Math.random() * grid.columns), Math.floor(Math.random() * (grid.columns - this.size))]
         // console.log(placement)
-        console.log("hello")
+        // console.log("hello")
         for (let i = 0; i <= this.size - 1; i++) {
             if (this.isVertical) {
                 this.position.push([placementVert[0]++, placementVert[1]])
@@ -129,13 +130,13 @@ class Ship {
                 this.position.push([placementHorizontal[0], placementHorizontal[1]++])
             }
             //Check if ship is on the board
-            if (!this.isOnBoard(grid) || this.isThisOccupied()) {
-                console.log("is this working")
-                //if not remove the ship
-                this.position = []
-                this.computerPlacement(grid)
-                // console.log(this.position)
-            }
+        }
+        if (!this.isOnBoard(grid) || this.isThisOccupied()) {
+            // console.log("is this working")
+            //if not remove the ship
+            this.position = []
+            this.computerPlacement(grid)
+            // console.log(this.position)
         }
     }
     
@@ -212,9 +213,9 @@ class Ship {
     }
     
     isThisOccupied() {
-        console.log("hi")
+        // console.log("hi")
         let bool = false
-        const arr = computerPlayer.ships.filter(item => item !== this)
+        const arr = player.ships.filter(item => item !== this)
         // for (let i = 0; i <= arr.length - 1; i++) {
         //     for (let j = 0; j <= this.size; j++) {
         //         if (player.ships[i].position[j] !== undefined) {
@@ -230,10 +231,10 @@ class Ship {
 // debugger
         for (let i = 0; i <= arr.length - 1; i++) {
             for (let j = 0; j <= arr[i].position.length - 1; j++) {
-                console.log(arr[i].position[j] !== undefined, this.position[j] !== undefined)
+                // console.log(arr[i].position[j] !== undefined, this.position[j] !== undefined)
                 for (let l = 0; l <= this.position.length; l++) {
                     if (arr[i].position[l] !== undefined && this.position[j] !== undefined) {
-                        console.log(arr[i].position[j], this.position[j])
+                        // console.log(arr[i].position[j], this.position[j])
                         if (arr[i].position[l][0] === this.position[j][0] &&
                             arr[i].position[l][1] === this.position[j][1]
                         ) {
@@ -254,7 +255,7 @@ class Ship {
         //         // val++
         //     }
         // }))
-        console.log(bool)
+        // console.log(bool)
         return bool
     }
 }
@@ -299,7 +300,6 @@ class Grid {
 
                             }
                         })) 
-
                     }
                 })
             }
@@ -330,7 +330,7 @@ startGameBtn.addEventListener("click", () => {
     const compSubmarine = new Ship("compSubmarine", 3)
     const compBattleship = new Ship("compBattleship", 4)
     computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship])
-    computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid, el))
+    computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
     console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
     console.log(computerPlayer.ships)
 })
