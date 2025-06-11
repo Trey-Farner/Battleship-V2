@@ -20,13 +20,6 @@ let computerPlayer;
 
 
 
-
-
-
-
-
-
-
 class Player {
     constructor(ships) {
         this.ships = ships
@@ -48,6 +41,17 @@ class Player {
         })
         sunkShips === this.ships.length ? true : false
     }
+
+    allShipsPlacedValidator() {
+        let bool;
+        let numberOfShipsPlaced = 0
+        this.ships.forEach(ship => ship.position.length > 0 ? numberOfShipsPlaced++ : numberOfShipsPlaced) 
+        numberOfShipsPlaced < this.ships.length ? bool = false : bool = true
+        console.log(numberOfShipsPlaced)
+        return bool
+    }
+
+
 }
 
 class ComputerPlayer extends Player {
@@ -62,21 +66,52 @@ class ComputerPlayer extends Player {
         }
     }
 
-    takeTurn(grid) {
+    takeTurn() {
+        // debugger
         const coor = computerPlayer.makeMove()
-        let arr = computerPlayer.selections.filter(item => item !== coor)
-        computerPlayer.ships.forEach(el => el.position.forEach(pos => {
-            if ((pos[0] === coor[0] && pos[1] === coor[1]) || arr.length === computerPlayer.selections.length) {
-                // color = "red"
-                computerPlayer.selections.push(coor)
-                el.hit(medGrid, coor)
-                console.log(el.isSunk)
+        // let arr = this.selections.filter(item => (item[0] !== coor[0] && item[1] !== coor[1]))
+        // console.log(arr)
+        console.log(computerPlayer.selections)
+        let bool = this.matchingTiles(coor)
+        if (bool) {
+            this.takeTurn()
+        } else {
+            setTimeout(() => {
+                player.ships.forEach(el => el.position.forEach(pos => {
+                // debugger
+                if (pos[0] === coor[0] && pos[1] === coor[1]) {
+                    // color = "red"
+                    el.hit(medGrid, coor)
+                    // this.selections.push(coor)
+                    // console.log(computerPlayer.selections, coor)
+                } else {
+                    document.getElementById(`${medGrid.name}-tile-${coor[0]}-${coor[1]}`).classList.add("grey")
+                    // console.log("miss")
+                }
+            }))
+            this.selections.push(coor)
+            setTimeout(() => {
+                player.switchTurns()
+            }, 500)
+            }, 1000)
+        }
+        // console.log(arr.length < computerPlayer.selections.length - 1)
+        // console.log(computerPlayer.selections)
+        // computerPlayer.switchTurns()
+    }
+
+    matchingTiles(coordinate) {
+        let bool = false
+        this.selections.forEach(tile => {
+            if (tile[0] === coordinate[0] && tile[1] === coordinate[1]) {
+                console.log(tile[0], tile[1], coordinate[0], coordinate[1])
+                bool = true
             } else {
-                // document.getElementById(`${grid.name}-tile-${i}-${j}`).classList.add(color)
+                console.log(tile[0], tile[1], coordinate[0], coordinate[1])
             }
-        })) 
-        player.switchTurns()
-        computerPlayer.switchTurns()
+        })
+        console.log(bool)
+        return bool
     }
 }
 
@@ -123,7 +158,7 @@ class Ship {
     hit(board, arr) {
         this.hits++;
         this.hitTiles.push(arr)
-        console.log(`${board.name}-tile-${arr[0]}-${arr[1]}`)
+        // console.log(`${board.name}-tile-${arr[0]}-${arr[1]}`)
         document.getElementById(`${board.name}-tile-${arr[0]}-${arr[1]}`).classList.add("red")
         if (this.hits >= this.size) {
             this.isSunk = true
@@ -194,7 +229,7 @@ class Ship {
     
     removeShip(grid) {
         for (let i = 0; i <= this.size - 1; i++) {
-            if (this.isOnBoard(grid) && !this.isThisOccupied()) {
+            if (this.isOnBoard(grid) && !this.isThisOccupied(player)) {
                 document.getElementById(`${grid.name}-tile-${this.position[i][0]}-${this.position[i][1]}`).classList.remove("green")
             }
             console.log("remove")
@@ -295,7 +330,7 @@ class Grid {
                             })) 
                             player.switchTurns()
                             computerPlayer.takeTurn()
-                            computerPlayer.switchTurns()
+                            // computerPlayer.switchTurns()
                         }
                     }
                 })
@@ -303,6 +338,8 @@ class Grid {
         }
     }
 }
+
+
 
 
 const destroyer = new Ship("destroyer", 2)
@@ -322,14 +359,19 @@ computerMedGrid.generateTiles(computerGridContainer)
 // let playerShips = [destroyer, submarine, battleship]
 
 startGameBtn.addEventListener("click", () => {
-    mediumGrid.classList.add("player-board-transition")
-    shipContainer.style.display = "none"
-    const compDestroyer = new Ship("compDestroyer", 2)
-    const compSubmarine = new Ship("compSubmarine", 3)
-    const compBattleship = new Ship("compBattleship", 4)
-    computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship])
-    computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
-    console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
-    console.log(computerPlayer.ships)
-    player.turn = true
+    console.log(player.allShipsPlacedValidator())
+    if (player.allShipsPlacedValidator()) {
+        mediumGrid.classList.add("player-board-transition")
+        shipContainer.style.display = "none"
+        const compDestroyer = new Ship("compDestroyer", 2)
+        const compSubmarine = new Ship("compSubmarine", 3)
+        const compBattleship = new Ship("compBattleship", 4)
+        computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship])
+        computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
+        console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
+        console.log(computerPlayer.ships)
+        player.turn = true
+    } else {
+        console.log("placeShip")
+    }
 })
