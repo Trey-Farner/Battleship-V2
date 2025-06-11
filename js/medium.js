@@ -51,7 +51,20 @@ class Player {
         return bool
     }
 
-
+    isAHit(coor) {
+        player.ships.forEach(el => el.position.forEach(pos => {
+            // debugger
+            if (pos[0] === coor[0] && pos[1] === coor[1]) {
+                // color = "red"
+                el.hit(medGrid, coor)
+                // this.selections.push(coor)
+                // console.log(computerPlayer.selections, coor)
+            } else {
+                document.getElementById(`${medGrid.name}-tile-${coor[0]}-${coor[1]}`).classList.add("grey")
+                // console.log("miss")
+            }
+        }))
+    }
 }
 
 class ComputerPlayer extends Player {
@@ -60,11 +73,6 @@ class ComputerPlayer extends Player {
         return randomMove
     }
     
-    isAHit() {
-        if (this.makeMove()[0] === playerShips[0]) {
-            
-        }
-    }
 
     takeTurn() {
         // debugger
@@ -77,22 +85,11 @@ class ComputerPlayer extends Player {
             this.takeTurn()
         } else {
             setTimeout(() => {
-                player.ships.forEach(el => el.position.forEach(pos => {
-                // debugger
-                if (pos[0] === coor[0] && pos[1] === coor[1]) {
-                    // color = "red"
-                    el.hit(medGrid, coor)
-                    // this.selections.push(coor)
-                    // console.log(computerPlayer.selections, coor)
-                } else {
-                    document.getElementById(`${medGrid.name}-tile-${coor[0]}-${coor[1]}`).classList.add("grey")
-                    // console.log("miss")
-                }
-            }))
-            this.selections.push(coor)
-            setTimeout(() => {
-                player.switchTurns()
-            }, 500)
+                this.isAHit(coor)
+                this.selections.push(coor)
+                setTimeout(() => {
+                    player.switchTurns()
+                }, 500)
             }, 1000)
         }
         // console.log(arr.length < computerPlayer.selections.length - 1)
@@ -112,6 +109,43 @@ class ComputerPlayer extends Player {
         })
         console.log(bool)
         return bool
+    }
+
+    selectAdjacentTile() {
+        let nextTile = []
+        player.ships.forEach(el => {
+            if (el.isSunk) { 
+            } else if (el.hitTiles.length === 0) {
+            } else {
+                const lastHit = el.hitTiles[el.hitTiles.length - 1]
+                switch (Math.floor(Math.random() * 4)) {
+                    case 0: 
+                        nextTile.push(lastHit[0] + 1)
+                        nextTile.push(lastHit[1])
+                        break;
+                    case 0: 
+                        nextTile.push(lastHit[0] - 1)
+                        nextTile.push(lastHit[1])
+                        break;
+                    case 0: 
+                        nextTile.push(lastHit[0])
+                        nextTile.push(lastHit[1] + 1)
+                        break;
+                    case 0: 
+                        nextTile.push(lastHit[0])
+                        nextTile.push(lastHit[1] - 1)
+                        break;
+                    default:
+                }
+
+                if (medGrid.columns >= nextTile[0] >= -1 ||
+                    medGrid.columns >= nextTile[1] >= -1) {
+                        this.selectAdjacentTile()
+                } else {
+                    return nextTile
+                }
+            }
+        })
     }
 }
 
@@ -162,6 +196,7 @@ class Ship {
         document.getElementById(`${board.name}-tile-${arr[0]}-${arr[1]}`).classList.add("red")
         if (this.hits >= this.size) {
             this.isSunk = true
+            turnIndicator.innerText = `${this.name} is sunk`
         }
     }
     
@@ -342,9 +377,9 @@ class Grid {
 
 
 
-const destroyer = new Ship("destroyer", 2)
-const submarine = new Ship("submarine", 3)
-const battleship = new Ship("battleship", 4)
+const destroyer = new Ship("your destroyer", 2)
+const submarine = new Ship("your submarine", 3)
+const battleship = new Ship("your battleship", 4)
 const player = new Player([destroyer, submarine, battleship])
 destroyer.createShip()
 submarine.createShip()
@@ -363,9 +398,9 @@ startGameBtn.addEventListener("click", () => {
     if (player.allShipsPlacedValidator()) {
         mediumGrid.classList.add("player-board-transition")
         shipContainer.style.display = "none"
-        const compDestroyer = new Ship("compDestroyer", 2)
-        const compSubmarine = new Ship("compSubmarine", 3)
-        const compBattleship = new Ship("compBattleship", 4)
+        const compDestroyer = new Ship("Enemy Destroyer", 2)
+        const compSubmarine = new Ship("Enemy Submarine", 3)
+        const compBattleship = new Ship("Enemy Battleship", 4)
         computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship])
         computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
         console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
