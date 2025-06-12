@@ -9,6 +9,8 @@ const invalidPlacement = document.getElementById("invalid-placement")
 const turnIndicator = document.getElementById("turn-indicator")
 const startGameBtn = document.getElementById("start-game")
 const computerGridContainer = document.getElementById("computer-container")
+const body = document.querySelector("body")
+const rotateBtn = document.getElementById("rotate-btn")
 // let medGrid = []
 // let gridRow = 5
 // let gridCol = 5
@@ -16,12 +18,14 @@ const computerGridContainer = document.getElementById("computer-container")
 let players;
 let selectedShip;
 let computerPlayer;
+let val = 0
 
 
 
 
 class Player {
-    constructor(ships) {
+    constructor(ships, name) {
+        this.name = name
         this.ships = ships
         this.turn = false
         this.win = false
@@ -34,12 +38,32 @@ class Player {
     
     winCheck() {
         let sunkShips = 0
+        const opponent = players.filter(user => user !== this)
+        console.log(opponent)
         this.ships.forEach(el => {
             if (el.isSunk) {
                 sunkShips++
-            } 
+            }
         })
-        sunkShips === this.ships.length ? true : false
+        // console.log(opponent[0].name)
+        if (sunkShips >= this.ships.length) {
+            console.log(`${opponent[0].name} wins`)
+            turnIndicator.innerText = `${opponent[0].name} wins`
+            const winIndicator = document.createElement("div")
+            winIndicator.id = "overlay"
+            winIndicator.classList.add("overlay")
+            body.appendChild(winIndicator)
+        } else {
+            // debugger
+            // this.switchTurns()
+            // opponent[0].switchTurns()
+            this.switchTurns()
+            opponent[0].switchTurns()
+            // setTimeout(() => {
+            // }, 500)
+        }
+        console.log(this.name, this.turn)
+        console.log(opponent[0].name, opponent[0].turn)
     }
 
     allShipsPlacedValidator() {
@@ -52,7 +76,9 @@ class Player {
     }
 
     isAHit(coor) {
+        // console.log(coor)
         player.ships.forEach(el => el.position.forEach(pos => {
+            // console.log(el.position)
             // debugger
             if (pos[0] === coor[0] && pos[1] === coor[1]) {
                 // color = "red"
@@ -70,27 +96,31 @@ class Player {
 class ComputerPlayer extends Player {
     makeMove() {
         let randomMove = [Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)]
+        // console.log(randomMove)
         return randomMove
     }
     
 
-    takeTurn() {
+    takeTurn(coor) {
         // debugger
-        const coor = computerPlayer.makeMove()
+        // const coor = computerPlayer.makeMove()
         // let arr = this.selections.filter(item => (item[0] !== coor[0] && item[1] !== coor[1]))
         // console.log(arr)
-        console.log(computerPlayer.selections)
-        let bool = this.matchingTiles(coor)
-        if (bool) {
-            this.takeTurn()
+        // console.log(computerPlayer.selections)
+        if (coor === undefined) {
+            this.takeTurn(this.makeMove())
         } else {
-            setTimeout(() => {
-                this.isAHit(coor)
-                this.selections.push(coor)
+            let bool = this.matchingTiles(coor)
+            console.log(coor)
+            if (bool) {
+                this.takeTurn(this.selectAdjacentTile(this.makeMove()))
+            } else {
                 setTimeout(() => {
-                    player.switchTurns()
-                }, 500)
-            }, 1000)
+                    this.isAHit(coor)
+                    this.selections.push(coor)
+                    this.winCheck()
+                }, 1000)
+            }
         }
         // console.log(arr.length < computerPlayer.selections.length - 1)
         // console.log(computerPlayer.selections)
@@ -100,52 +130,66 @@ class ComputerPlayer extends Player {
     matchingTiles(coordinate) {
         let bool = false
         this.selections.forEach(tile => {
+            // debugger
+            // console.log(coordinate)
             if (tile[0] === coordinate[0] && tile[1] === coordinate[1]) {
-                console.log(tile[0], tile[1], coordinate[0], coordinate[1])
+                // console.log(tile[0], tile[1], coordinate[0], coordinate[1])
                 bool = true
             } else {
-                console.log(tile[0], tile[1], coordinate[0], coordinate[1])
+                // console.log(tile[0], tile[1], coordinate[0], coordinate[1])
             }
         })
         console.log(bool)
         return bool
     }
 
-    selectAdjacentTile() {
-        let nextTile = []
+    selectAdjacentTile(coor) {
+        let nextTile = coor
         player.ships.forEach(el => {
-            if (el.isSunk) { 
+            // console.log(el.hitTiles)
+            // debugger
+            if (el.isSunk) {
+                // nextTile = [coor[0], coor[1]]
             } else if (el.hitTiles.length === 0) {
+                // console.log(coor)
+                // nextTile = [coor[0], coor[1]]
             } else {
+                // debugger
                 const lastHit = el.hitTiles[el.hitTiles.length - 1]
+                // console.log(lastHit)
                 switch (Math.floor(Math.random() * 4)) {
                     case 0: 
-                        nextTile.push(lastHit[0] + 1)
-                        nextTile.push(lastHit[1])
+                        nextTile = [lastHit[0] + 1, lastHit[1]]
                         break;
-                    case 0: 
-                        nextTile.push(lastHit[0] - 1)
-                        nextTile.push(lastHit[1])
+                    case 1: 
+                        nextTile = [lastHit[0] - 1, lastHit[1]]
                         break;
-                    case 0: 
-                        nextTile.push(lastHit[0])
-                        nextTile.push(lastHit[1] + 1)
+                    case 2: 
+                        nextTile = [lastHit[0], lastHit[1] + 1]
                         break;
-                    case 0: 
-                        nextTile.push(lastHit[0])
-                        nextTile.push(lastHit[1] - 1)
+                    case 3: 
+                        nextTile = [lastHit[0], lastHit[1] - 1]
                         break;
                     default:
                 }
-
-                if (medGrid.columns >= nextTile[0] >= -1 ||
-                    medGrid.columns >= nextTile[1] >= -1) {
-                        this.selectAdjacentTile()
-                } else {
-                    return nextTile
-                }
             }
         })
+        // console.log(nextTile)
+        // debugger
+        val++
+        console.log(val)
+        // console.log((nextTile[0] >= medGrid.columns && nextTile[0] <= -1), 
+        //     (nextTile[1] >= medGrid.columns && nextTile[0] <= -1))
+        if (val > 100) {
+            return this.makeMove()
+        } else if ((nextTile[0] >= medGrid.columns || nextTile[0] <= -1) ||
+            (nextTile[1] >= medGrid.columns || nextTile[1] <= -1)) {
+                console.log("offBoard")
+                return this.selectAdjacentTile(computerPlayer.makeMove())
+        } else {
+            // console.log(nextTile)
+            return nextTile
+        }
     }
 }
 
@@ -349,6 +393,7 @@ class Grid {
                         }
                         // console.log(selectedShip)
                     }
+                    // debugger
                     if (this.name === "computerMedGrid") {
                         if (player.turn) {
                             player.selections.push([i, j])
@@ -363,9 +408,14 @@ class Grid {
 
                                 }
                             })) 
-                            player.switchTurns()
-                            computerPlayer.takeTurn()
+                            val = 0
                             // computerPlayer.switchTurns()
+                            // debugger
+                            player.winCheck()
+                            console.log(computerPlayer.turn)
+                            if (computerPlayer.turn) {
+                                computerPlayer.takeTurn(computerPlayer.selectAdjacentTile(computerPlayer.makeMove()))
+                            }
                         }
                     }
                 })
@@ -380,7 +430,7 @@ class Grid {
 const destroyer = new Ship("your destroyer", 2)
 const submarine = new Ship("your submarine", 3)
 const battleship = new Ship("your battleship", 4)
-const player = new Player([destroyer, submarine, battleship])
+const player = new Player([destroyer, submarine, battleship], "player")
 destroyer.createShip()
 submarine.createShip()
 battleship.createShip()
@@ -401,12 +451,24 @@ startGameBtn.addEventListener("click", () => {
         const compDestroyer = new Ship("Enemy Destroyer", 2)
         const compSubmarine = new Ship("Enemy Submarine", 3)
         const compBattleship = new Ship("Enemy Battleship", 4)
-        computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship])
+        computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compBattleship], "Computer")
         computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
-        console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
-        console.log(computerPlayer.ships)
+        players = [player, computerPlayer]
+        // console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)
         player.turn = true
     } else {
         console.log("placeShip")
     }
+})
+
+let bool = false
+rotateBtn.addEventListener("click", () => {
+    if (bool) {
+        bool = false
+        rotateBtn.style.backgroundColor = "white"
+    } else {
+        bool = true
+        rotateBtn.style.backgroundColor = "orange"
+    }
+    player.ships.forEach(ship => ship.isVertical = bool)
 })
