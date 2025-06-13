@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/medium.css">
+    <link rel="stylesheet" href="./css/hard.css">
     <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon">
     <title>Battleship</title>
 </head>
 <body>
+    <img src="./images/ocean.avif" alt="Ocean background" class="background">
+
     <h1 class="place-ship">Place Your Ship</h1>
     <h1 class="turn-indicator" id="turn-indicator"></h1>
     <div id="computer-container" class="computer-container">
         <div class="med-container" id="med-container"></div>
     </div>
-    <div id="ships-container"></div>
+    <div id="ships-container" class="ships-container"></div>
 
-    <button type="button" id="reset-selection-btn">reset</button>
-    <p id="invalid-placement"></p>
-    <button id="start-game">Start Game</button>
-    <button id="rotate-btn">rotate</button>
+    <div class="placement-btns">
+        <p id="invalid-placement"></p>
+        <button id="start-game">Start Game</button>
+        <button id="rotate-btn">rotate</button>
+    </div>
 
-    <script src="./js/medium.js"></script>
+    <script type="module" src="./js/hard.js"></script>
 </body>
 </html>

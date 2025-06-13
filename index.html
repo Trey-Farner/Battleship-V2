@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <title>Document</title>
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon">
+    <title>Battleship</title>
 </head>
 <body>
-    <img src="./images/Background.jpg" alt="Warship in the rain" class="background">
+    <img src="./images/BattleShip.png" alt="Warship" class="background">
+    <img src="./images/BattleShip-removebg-preview.png" alt="Warship with no background" class="background threeD">
+    <h1 id="title" class="title">Battleship</h1>
     <div class="title-login" id="title-login">
-        <h1 id="title">Battleship</h1>
         <h2 id="rules-title">Rules</h2>
         <p>Guess where the enemy battleship is by clicking on a tile and seeing what the result is.</p>
-        <button type="button" id="start-btn" class="btn">Easy</button>
-        <a type="button" id="medium-btn" class="btn" href="./medium.html">Medium</a>
+        <div class="difficulty-buttons">
+            <button type="button" id="start-btn" class="btn">Easy</button>
+            <a type="button" id="medium-btn" class="btn" href="./medium.html">Medium</a>
+            <a type="button" id="hard-btn" class="btn" href="./hard.html">Hard</a>
+        </div>
     </div>
 
     <div class="game-container" id="game-container"></div>
@@ -24,8 +29,6 @@
         <p id="round-count"></p>
         <button id="reset-btn" class="btn">Reset</button>
     </div>
-
-    <!--This will be the newly generated 5x5 grid-->
 
     <script src="./js/script.js"></script>
 </body>

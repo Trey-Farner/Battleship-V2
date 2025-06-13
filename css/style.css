@@ -4,9 +4,9 @@
     to {opacity: 1}
 }
 
-h1 {
-    margin: 0 0 2rem 0;
-    font-size: 5rem;
+@font-face {
+    font-family: "ITC Machine";
+    src: url("../fonts/ITC\ Machine\ Bold.otf") format("opentype"),
 }
 
 body {
@@ -20,7 +20,8 @@ body {
 
 .title-login {
     position: relative;
-    top: 20%;
+    z-index: 2;
+    top: 10%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -36,10 +37,41 @@ body {
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    object-position: center;
+    object-position: top;
     z-index: -1;
     top: 0p;
     filter: brightness(60%);
+}
+
+.title {
+    justify-self: center;
+    position: relative;
+    top: 10%;
+    margin: 0 0 2rem 0;
+    font-size: clamp(5rem, 25vw, 20rem);
+    font-family: "ITC Machine", 'Times New Roman', Times, serif;
+}
+
+.title::after {
+    position: absolute;
+    inset: 0 0 0 0;
+    content: "BATTLESHIP";
+    z-index: 2;
+    -webkit-text-stroke: 5px black;
+    color: transparent;
+}
+
+.difficulty-buttons {
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: space-evenly;
+}
+
+.threeD {
+    position: absolute;
+    top: 0;
+    z-index: 2;
 }
 
 .game-container {
@@ -54,6 +86,7 @@ body {
     width: 80%;
     aspect-ratio: 1 / 1;
     margin-top: 0;
+    z-index: 5;
 }
 
 h3 {
@@ -90,6 +123,7 @@ h3 {
     border-radius: 10px;
     color: white;
     padding: .45rem .85rem;
+    text-decoration: none;
 }
 
 .menu {

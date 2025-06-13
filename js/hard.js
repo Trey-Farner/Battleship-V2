@@ -21,8 +21,6 @@ let computerPlayer;
 let val = 0
 
 
-
-
 class Player {
     constructor(ships, name) {
         this.name = name
@@ -84,7 +82,7 @@ class Player {
                 // color = "red"
                 el.hit(medGrid, coor)
                 // this.selections.push(coor)
-                // console.log(computerPlayer.selections, coor)
+                console.log(computerPlayer.selections, coor)
             } else {
                 document.getElementById(`${medGrid.name}-tile-${coor[0]}-${coor[1]}`).classList.add("grey")
                 // console.log("miss")
@@ -95,8 +93,8 @@ class Player {
 
 class ComputerPlayer extends Player {
     makeMove() {
-        let randomMove = [Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)]
-        // console.log(randomMove)
+        let randomMove = [Math.floor(Math.random() * medGrid.rows), Math.floor(Math.random() * medGrid.rows)]
+        console.log(randomMove)
         return randomMove
     }
     
@@ -433,24 +431,36 @@ class Grid {
 
 
 const destroyer = new Ship("your destroyer", 2)
-const player = new Player([destroyer], "player")
+const submarine = new Ship("your submarine", 3)
+const cruiser = new Ship("your cruiser", 3)
+const battleship = new Ship("your battleship", 4)
+const aircraftCarrier = new Ship("your Aircraft Carrier", 5)
+const player = new Player([destroyer, submarine, cruiser, battleship, aircraftCarrier], "player")
 destroyer.createShip()
+submarine.createShip()
+cruiser.createShip()
+battleship.createShip()
+aircraftCarrier.createShip()
 
 
 
-const medGrid = new Grid("medGrid", 5, 5)
-const computerMedGrid = new Grid("computerMedGrid", 5, 5)
+const medGrid = new Grid("medGrid", 10, 10)
+const computerMedGrid = new Grid("computerMedGrid", 10, 10)
 medGrid.generateTiles(mediumGrid)
 computerMedGrid.generateTiles(computerGridContainer)
 // let playerShips = [destroyer, submarine, battleship]
 
 startGameBtn.addEventListener("click", () => {
-    // console.log(player.allShipsPlacedValidator())
+    console.log(player.allShipsPlacedValidator())
     if (player.allShipsPlacedValidator()) {
         mediumGrid.classList.add("player-board-transition")
         shipContainer.style.display = "none"
         const compDestroyer = new Ship("Enemy Destroyer", 2)
-        computerPlayer = new ComputerPlayer([compDestroyer], "Computer")
+        const compSubmarine = new Ship("Enemy Submarine", 3)
+        const compCruiser = new Ship("Enemy Cruiser", 3)
+        const compBattleship = new Ship("Enemy Battleship", 4)
+        const compAircraftCarrier = new Ship("Enemy Aircraft Carrier", 5)
+        computerPlayer = new ComputerPlayer([compDestroyer, compSubmarine, compCruiser, compBattleship, compAircraftCarrier], "Computer")
         computerPlayer.ships.forEach(el => el.computerPlacement(computerMedGrid))
         players = [player, computerPlayer]
         // console.log(compDestroyer.position, compSubmarine.position, compBattleship.position)

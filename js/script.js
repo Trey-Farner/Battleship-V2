@@ -3,6 +3,7 @@ const container = document.getElementById("game-container")
 const loadScreen = document.getElementById("title-login")
 const resetBtn = document.getElementById("reset-btn")
 const menuBtn = document.getElementById("menu-btn")
+const title = document.getElementById("title")
 let answer = Math.floor(Math.random() * 8) + 1
 
 container.style.display = "none"
@@ -25,6 +26,7 @@ const startGame = () => {
     container.style.display = "flex"
     loadScreen.style.display = "none"
     menuBtn.style.display = "block"
+    title.style.display = "none"
 }
 
 startBtn.addEventListener("click", startGame)
