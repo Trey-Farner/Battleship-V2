@@ -11,6 +11,7 @@ const startGameBtn = document.getElementById("start-game")
 const computerGridContainer = document.getElementById("computer-container")
 const body = document.querySelector("body")
 const rotateBtn = document.getElementById("rotate-btn")
+const placementBtns = document.getElementById("placement-btns")
 // let medGrid = []
 // let gridRow = 5
 // let gridCol = 5
@@ -53,6 +54,7 @@ class Player {
             winIndicator.id = "overlay"
             winIndicator.classList.add("overlay")
             body.appendChild(winIndicator)
+            
         } else {
             // debugger
             // this.switchTurns()
@@ -433,7 +435,7 @@ class Grid {
 
 
 const destroyer = new Ship("your destroyer", 2)
-const player = new Player([destroyer], "player")
+const player = new Player([destroyer], "Player")
 destroyer.createShip()
 
 
@@ -447,6 +449,8 @@ computerMedGrid.generateTiles(computerGridContainer)
 startGameBtn.addEventListener("click", () => {
     // console.log(player.allShipsPlacedValidator())
     if (player.allShipsPlacedValidator()) {
+        turnIndicator.innerText = ""
+        placementBtns.style.display = "none"
         mediumGrid.classList.add("player-board-transition")
         shipContainer.style.display = "none"
         const compDestroyer = new Ship("Enemy Destroyer", 2)

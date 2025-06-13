@@ -10,18 +10,19 @@
 <body>
     <img src="./images/ocean.avif" alt="Ocean background" class="background">
 
-    <h1 class="place-ship">Place Your Ship</h1>
-    <h1 class="turn-indicator" id="turn-indicator"></h1>
-    <div id="computer-container" class="computer-container">
-        <div class="med-container" id="med-container"></div>
-    </div>
-    <div id="ships-container" class="ships-container"></div>
+    <main>
+        <h1 class="place-ship" id="turn-indicator">Place Your Ship</h1>
+        <div id="computer-container" class="computer-container">
+            <div class="med-container" id="med-container"></div>
+        </div>
+        <div id="ships-container" class="ships-container" aria-label="Your Ships"></div>
 
-    <div class="placement-btns">
         <p id="invalid-placement"></p>
-        <button id="start-game">Start Game</button>
-        <button id="rotate-btn">rotate</button>
-    </div>
+        <div class="placement-btns" id="placement-btns">
+            <button id="start-game">Start Game</button>
+            <button id="rotate-btn">Rotate</button>
+        </div>
+    </main>
 
     <script type="module" src="./js/hard.js"></script>
 </body>

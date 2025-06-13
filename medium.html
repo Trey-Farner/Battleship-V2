@@ -8,17 +8,21 @@
     <title>Battleship</title>
 </head>
 <body>
-    <h1 class="place-ship">Place Your Ship</h1>
-    <h1 class="turn-indicator" id="turn-indicator"></h1>
-    <div id="computer-container" class="computer-container">
-        <div class="med-container" id="med-container"></div>
-    </div>
-    <div id="ships-container"></div>
+    <img src="./images/ocean.avif" alt="Ocean background" class="background">
 
-    <button type="button" id="reset-selection-btn">reset</button>
-    <p id="invalid-placement"></p>
-    <button id="start-game">Start Game</button>
-    <button id="rotate-btn">rotate</button>
+    <main>
+        <h1 class="place-ship" id="turn-indicator">Place Your Ship</h1>
+        <div id="computer-container" class="computer-container">
+            <div class="med-container" id="med-container"></div>
+        </div>
+        <div id="ships-container" class="ships-container" aria-label="Your Ships"></div>
+
+        <p id="invalid-placement"></p>
+        <div class="placement-btns" id="placement-btns">
+            <button id="start-game">Start Game</button>
+            <button id="rotate-btn">Rotate</button>
+        </div>
+    </main>
 
     <script src="./js/medium.js"></script>
 </body>

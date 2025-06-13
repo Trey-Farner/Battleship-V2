@@ -11,6 +11,7 @@ const startGameBtn = document.getElementById("start-game")
 const computerGridContainer = document.getElementById("computer-container")
 const body = document.querySelector("body")
 const rotateBtn = document.getElementById("rotate-btn")
+const placementBtns = document.getElementById("placement-btns")
 // let medGrid = []
 // let gridRow = 5
 // let gridCol = 5
@@ -435,7 +436,7 @@ const submarine = new Ship("your submarine", 3)
 const cruiser = new Ship("your cruiser", 3)
 const battleship = new Ship("your battleship", 4)
 const aircraftCarrier = new Ship("your Aircraft Carrier", 5)
-const player = new Player([destroyer, submarine, cruiser, battleship, aircraftCarrier], "player")
+const player = new Player([destroyer, submarine, cruiser, battleship, aircraftCarrier], "Player")
 destroyer.createShip()
 submarine.createShip()
 cruiser.createShip()
@@ -453,6 +454,8 @@ computerMedGrid.generateTiles(computerGridContainer)
 startGameBtn.addEventListener("click", () => {
     console.log(player.allShipsPlacedValidator())
     if (player.allShipsPlacedValidator()) {
+        placementBtns.style.display = "none"
+        turnIndicator.innerText = ""
         mediumGrid.classList.add("player-board-transition")
         shipContainer.style.display = "none"
         const compDestroyer = new Ship("Enemy Destroyer", 2)
